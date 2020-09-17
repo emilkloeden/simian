@@ -105,8 +105,8 @@ class Parser:
 
     # STATEMENTS
     def parse_statement(self) -> ast.Statement:
-        # if self.current_token.token_type == TokenType.COMMENT:
-        #     return self.parse_comment_statement()
+        if self.current_token.token_type == TokenType.COMMENT:
+            return self.parse_comment_statement()
         if self.current_token.token_type == TokenType.LET:
             return self.parse_let_statement()
         elif self.current_token.token_type == TokenType.RETURN:
@@ -115,7 +115,7 @@ class Parser:
             return self.parse_expression_statement()
 
     def parse_comment_statement(self):
-        pass
+        return ast.Comment(self.current_token, self.current_token.literal)
 
     def parse_return_statement(self):
         stmt = ast.ReturnStatement(self.current_token)

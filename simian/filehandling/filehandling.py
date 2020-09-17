@@ -5,6 +5,7 @@ from simian import parser
 from simian.evaluator import evaluate
 from simian.objects import new_environment
 from simian.token import TokenType
+from simian.repl import print_errors
 
 __all__ = [
     "lex_file",

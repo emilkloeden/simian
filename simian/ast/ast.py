@@ -22,6 +22,7 @@ __all__ = [
     "IndexExpression",
     "HashLiteral",
     "ImportExpression",
+    "Comment",
 ]
 
 
@@ -85,6 +86,18 @@ class ReturnStatement(Statement):
 
     def __str__(self):
         return f"{self.token.literal} {self.return_value};"
+
+
+class Comment(Statement):
+    def __init__(self, token: Token, value: Expression):
+        self.token = token
+        self.value = value
+
+    def token_literal(self):
+        return self.token.literal
+
+    def __str__(self):
+        return f"//{self.value};"
 
 
 class ExpressionStatement(Statement):
