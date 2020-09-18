@@ -295,12 +295,16 @@ def evaluate_integer_infix_expression(
 def evaluate_string_infix_expression(
     operator: str, left: objects.Object, right: objects.Object
 ) -> objects.Object:
-    if operator != "+":
-        return new_error(
-            f"unknown operator: {left.object_type().value} {operator} {right.object_type().value}"
-        )
+    if operator == "+":
+        return objects.String(left.value + right.value)
+    elif operator == "==":
+        return objects.Boolean(left.value == right.value)
+    elif operator == "!=":
+        return objects.Boolean(left.value != right.value)
 
-    return objects.String(left.value + right.value)
+    return new_error(
+        f"unknown operator: {left.object_type().value} {operator} {right.object_type().value}"
+    )
 
 
 def evaluate_array_infix_expression(

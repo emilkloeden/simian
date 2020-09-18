@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 
 from simian import lexer
@@ -27,6 +28,9 @@ def lex_file(filepath: str) -> None:
         print(f'\tERROR: File: "{filepath}" does not exist.')
     except IsADirectoryError:
         print(f'\tERROR: File: "{filepath}" is a directory.')
+    except KeyboardInterrupt:
+        print("Exiting...")
+        sys.exit(0)
 
 
 def parse_file(filepath: str) -> None:
@@ -46,6 +50,9 @@ def parse_file(filepath: str) -> None:
         print(f'\tERROR: File: "{filepath}" does not exist.')
     except IsADirectoryError:
         print(f'\tERROR: File: "{filepath}" is a directory.')
+    except KeyboardInterrupt:
+        print("Exiting...")
+        sys.exit(0)
 
 
 def evaluate_file(filepath: str) -> None:
@@ -68,3 +75,6 @@ def evaluate_file(filepath: str) -> None:
         print(f'\tERROR: File: "{filepath}" does not exist.')
     except IsADirectoryError:
         print(f'\tERROR: File: "{filepath}" is a directory.')
+    except KeyboardInterrupt:
+        print("Exiting...")
+        sys.exit(0)
