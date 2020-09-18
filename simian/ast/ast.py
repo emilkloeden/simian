@@ -23,6 +23,7 @@ __all__ = [
     "HashLiteral",
     "ImportExpression",
     "Comment",
+    "WhileStatement",
 ]
 
 
@@ -53,7 +54,7 @@ class Program(Node):
             return ""
 
     def __str__(self):
-        return "\n".join([str(s) for s in self.statements])
+        return "".join([str(s) for s in self.statements])
 
 
 ######################
@@ -86,6 +87,19 @@ class ReturnStatement(Statement):
 
     def __str__(self):
         return f"{self.token.literal} {self.return_value};"
+
+
+class WhileStatement(Statement):
+    def __init__(self, token: Token):
+        self.token = token
+        self.condition: Expression
+        self.body: Expression
+
+    def token_literal(self):
+        return self.token.literal
+
+    def __str__(self):
+        return f"{self.token.literal} ({self.condition}) {{{str(self.body)}}};"
 
 
 class Comment(Statement):

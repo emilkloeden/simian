@@ -52,6 +52,7 @@ class TokenType(enum.Enum):
     ELSE = "ELSE"
     RETURN = "RETURN"
     IMPORT = "IMPORT"
+    WHILE = "WHILE"
 
 
 keywords = {
@@ -63,15 +64,16 @@ keywords = {
     "else": TokenType.ELSE,
     "return": TokenType.RETURN,
     "import": TokenType.IMPORT,
+    "while": TokenType.WHILE,
 }
 
 
 def lookup_ident(ident: str) -> str:
-    #print(f"LOOKING UP IDENT: {ident} in keywords")
+    # print(f"LOOKING UP IDENT: {ident} in keywords")
     if ident in keywords:
-        #print(f"FOUND {keywords[ident]}")
+        # print(f"FOUND {keywords[ident]}")
         return keywords[ident]
-    #print(f"{ident} NOT FOUND in keywords, treating as identifier")
+    # print(f"{ident} NOT FOUND in keywords, treating as identifier")
     return TokenType.IDENT
 
 

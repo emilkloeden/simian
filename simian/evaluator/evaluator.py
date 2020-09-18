@@ -83,6 +83,8 @@ def evaluate(node: ast.Node, env: objects.Environment) -> objects.Object:
         return evaluate_index_expression(left, index)
     elif isinstance(node, ast.ImportExpression):
         return evaluate_import_expression(node, env)
+    elif isinstance(node, ast.WhileStatement):
+        return evaluate_while_statement(node, env)
     return None
 
 
@@ -109,6 +111,21 @@ def evaluate_block_statement(
             if rt in [ObjectType.RETURN_VALUE_OBJ, ObjectType.ERROR_OBJ]:
                 return result
     return result
+
+
+def evaluate_while_statement(stmt: ast.WhileStatement, env: objects.Environment):
+    while True:
+        evaluated = evaluate(stmt.condition, env)
+        if is_error(evaluated) or evaluated is None:
+            return evaluated
+        if is_truthy(evaluated):
+            consequence = evaluate(stmt.body, env)
+            if is_error(consequence):
+                return consequence
+        else:
+            break
+
+    return None
 
 
 def evaluate_expressions(
@@ -169,6 +186,13 @@ def evaluate_infix_expression(
         return native_bool_to_boolean_object(left == right)
     elif operator == "!=":
         return native_bool_to_boolean_object(left != right)
+    elif operator == "&&":
+        if left.object_type() == right.object_type() == ObjectType.BOOLEAN_OBJ:
+            return native_bool_to_boolean_object(left.value and right.value)
+    elif operator == "||":
+        if left.object_type() == right.object_type() == ObjectType.BOOLEAN_OBJ:
+            return native_bool_to_boolean_object(left.value or right.value)
+
     elif left.object_type() != right.object_type():
         return new_error(
             f"type mismatch: {left.object_type().value} {operator} {right.object_type().value}"

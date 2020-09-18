@@ -22,4 +22,6 @@ __all__ = [
     "IndexExpression",
     "HashLiteral",
     "ImportExpression",
+    "Comment",
+    "WhileStatement",
 ]

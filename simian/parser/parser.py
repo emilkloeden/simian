@@ -70,6 +70,7 @@ class Parser:
             TokenType.LBRACKET: self.parse_array_literal,
             TokenType.LBRACE: self.parse_hash_literal,
             TokenType.IMPORT: self.parse_import_expression,
+            TokenType.WHILE: self.parse_while_statement,
         }
 
         self.infix_parse_fns = {
@@ -111,6 +112,8 @@ class Parser:
             return self.parse_let_statement()
         elif self.current_token.token_type == TokenType.RETURN:
             return self.parse_return_statement()
+        elif self.current_token.token_type == TokenType.WHILE:
+            return self.parse_while_statement()
         else:
             return self.parse_expression_statement()
 
@@ -124,6 +127,23 @@ class Parser:
 
         if self.peek_token_is(TokenType.SEMICOLON):
             self.next_token()
+
+        return stmt
+
+    def parse_while_statement(self):
+        stmt = ast.WhileStatement(self.current_token)
+        if not self.expect_peek(TokenType.LPAREN):
+            return None
+
+        self.next_token()
+        stmt.condition = self.parse_expression(Precedence.LOWEST)
+        if not self.expect_peek(TokenType.RPAREN):
+            return None
+
+        if not self.expect_peek(TokenType.LBRACE):
+            return None
+
+        stmt.body = self.parse_block_statement()
 
         return stmt
 

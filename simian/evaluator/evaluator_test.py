@@ -48,6 +48,27 @@ def evaluate_return_statements():
         assert integer_object_tester(evaluated, expected)
 
 
+def test_while_statements():
+    tests = [
+        (
+            """
+            let i = 0; 
+            let myArr = []; 
+            while (i < 5) { 
+                push(myArr, i); let i = i+1; 
+            }; 
+            return myArr;
+            """,
+            [0, 1, 2, 3, 4],
+        )
+    ]
+    for tt in tests:
+        input_, expected = tt
+        evaluated = evaluate_input(input_)
+        for i, el in enumerate(evaluated.elements):
+            assert integer_object_tester(el, expected[i])
+
+
 ###############
 # EXPRESSIONS #
 # (LITERALS)  #
