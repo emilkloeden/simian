@@ -2,6 +2,7 @@ import sys
 from typing import List
 from simian import objects
 from simian.objects import ObjectType
+from simian.token import TokenType
 
 __all__ = ["BUILTINS"]
 
@@ -192,6 +193,44 @@ def type_fn(args: List[objects.Object]) -> objects.Object:
     return objects.String(args[0].object_type().value)
 
 
+def str_fn(args: List[objects.Object]) -> objects.Object:
+    if len(args) != 1:
+        return wrong_number_of_args(actual=len(args), expected=1)
+    return object.String(str(args[0]))
+
+
+def int_fn(args: List[objects.Object]) -> objects.Object:
+    if len(args) != 1:
+        return wrong_number_of_args(actual=len(args), expected=1)
+    src = args[0]
+    if src.object_type() == ObjectType.INTEGER_OBJ:
+        return src
+    elif src.object_type() == ObjectType.STRING_OBJ:
+        print(src)
+        try:
+            i = int(src.value)
+            ix = objects.Integer(TokenType.INT)
+            ix.value = i
+            return ix
+        except ValueError:
+            return objects.Error(
+                f"Cannot cast {src.object_type().value}({src}) to INTEGER"
+            )
+    return objects.Error(f"Cannot cast {src.object_type().value}({src}) to INTEGER")
+
+
+def reverse_fn(args: List[objects.Object]) -> objects.Object:
+    if len(args) != 1:
+        return wrong_number_of_args(actual=len(args), expected=1)
+    src = args[0]
+    if src.object_type() == ObjectType.ARRAY_OBJ:
+        reversed_elements = src.elements[::-1]
+        return objects.Array(reversed_elements)
+    elif src.object_type() == ObjectType.STRING_OBJ:
+        return object.String(src.value[::-1])
+    return new_error("argument to `reverse` must be ARRAY or STRING.")
+
+
 ####################
 #      HELPERS     #
 ####################
@@ -214,4 +253,7 @@ BUILTINS = {
     "keys": objects.Builtin(keys_fn),
     "values": objects.Builtin(values_fn),
     "type": objects.Builtin(type_fn),
+    "str": objects.Builtin(str_fn),
+    "reverse": objects.Builtin(reverse_fn),
+    "int": objects.Builtin(int_fn),
 }

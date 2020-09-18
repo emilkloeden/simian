@@ -373,6 +373,15 @@ def test_builtin_function_returning_ints_or_errors():
         ('last([11, 2, "a"], "two")', "wrong number of arguments. got=2, want=1"),
         ("exit(1, 2)", "wrong number of arguments. got=2, want=0 or 1"),
         ("exit([11, 2, 13])", "argument to `exit` must be INTEGER, got ARRAY",),
+        ('int("1")', 1),
+        ("int(1)", 1),
+        ("int(-1)", -1),
+        ("int(0)", 0),
+        ("int(-0)", 0),
+        ('int("-0")', 0),
+        ("int([1,2])", "Cannot cast ARRAY([1, 2]) to INTEGER"),
+        ('int("a")', "Cannot cast STRING(a) to INTEGER"),
+        ('int("1", "2")', "wrong number of arguments. got=2, want=1"),
     ]
 
     for tt in tests:
