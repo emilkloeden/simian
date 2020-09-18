@@ -196,7 +196,7 @@ def type_fn(args: List[objects.Object]) -> objects.Object:
 def str_fn(args: List[objects.Object]) -> objects.Object:
     if len(args) != 1:
         return wrong_number_of_args(actual=len(args), expected=1)
-    return object.String(str(args[0]))
+    return objects.String(str(args[0]))
 
 
 def int_fn(args: List[objects.Object]) -> objects.Object:
@@ -227,8 +227,10 @@ def reverse_fn(args: List[objects.Object]) -> objects.Object:
         reversed_elements = src.elements[::-1]
         return objects.Array(reversed_elements)
     elif src.object_type() == ObjectType.STRING_OBJ:
-        return object.String(src.value[::-1])
-    return new_error("argument to `reverse` must be ARRAY or STRING.")
+        return objects.String(src.value[::-1])
+    return objects.Error(
+        f"argument to `reverse` must be ARRAY or STRING, got {src.object_type().value}"
+    )
 
 
 ####################

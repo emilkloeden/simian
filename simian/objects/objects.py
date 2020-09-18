@@ -147,8 +147,13 @@ class Hash(Object):
 
     def __str__(self):
         ps = []
-        for key, value in self.pairs.items():
-            ps.append(f"{str(key)}: {str(value)}")
+        for hash_key, hash_pair in self.pairs.items():
+            key = hash_pair.key
+            key = (
+                '"' + str(key) + '"' if isinstance(hash_pair.key, String) else str(key)
+            )
+            value = str(hash_pair.value)
+            ps.append(f"{key}: {value}")
         return f"""{{{", ".join(ps)}}}"""
 
 

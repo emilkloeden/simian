@@ -427,6 +427,19 @@ def test_builtin_function_returning_strings_or_errors():
         ("type(type)", False, "BUILTIN"),
         ("type(type(type))", False, "STRING"),
         ("let a = fn(x) {x}; type(a)", False, "FUNCTION"),
+        ('reverse("123456")', False, "654321"),
+        (
+            'reverse({"1": "2"})',
+            True,
+            "argument to `reverse` must be ARRAY or STRING, got HASH",
+        ),
+        ("str(123)", False, "123"),
+        ("str(fn(x) {x})", False, "fn(x) {\nx\n}"),
+        ("str(true)", False, "true"),
+        ("str(false)", False, "false"),
+        ('str("abc")', False, "abc"),
+        ("str([1, 2 * 2 , 3])", False, "[1, 4, 3]"),
+        ('str({"a": 1})', False, '{"a": 1}'),
     ]
 
     for tt in tests:
@@ -469,6 +482,8 @@ def test_builtin_function_returning_arrays_or_errors():
             "argument to `values` must be HASH or MODULE, got STRING(Hello)",
         ),
         ('values({1: "a", 2: "b"})', ["a", "b"]),
+        ('reverse("1", "2")', "wrong number of arguments. got=2, want=1"),
+        ('reverse(["1", "2"])', ["2", "1"]),
     ]
 
     for tt in tests:
