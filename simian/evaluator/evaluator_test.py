@@ -129,6 +129,10 @@ def test_evaluate_boolean_expression():
         ("(1 < 2) == false", False),
         ("(1 > 2) == true", False),
         ("(1 > 2) == false", True),
+        ('"Hello World" == "Hello World!"', False),
+        ('"Hello World" == "Hello World"', True),
+        ('"Hello World" != "Hello World!"', True),
+        ('"Hello World" != "Hello World"', False),
     ]
 
     for tt in tests:
