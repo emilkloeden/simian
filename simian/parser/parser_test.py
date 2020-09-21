@@ -293,6 +293,17 @@ def test_index_expression():
     assert infix_expression_tester(index_exp.index, 1, "+", 1)
 
 
+def test_selector_expression():
+    input_ = "myHash.key"
+    program = build_program(input_)
+    stmt = program.statements[0]
+    assert isinstance(stmt, ast.ExpressionStatement)
+    exp = stmt.expression
+    assert isinstance(exp, ast.IndexExpression)
+    assert identifier_tester(exp.left, "myHash")
+    assert identifier_tester(exp.index, "key")
+
+
 ####################
 #      HELPERS     #
 ####################
@@ -306,6 +317,9 @@ def build_program(input_: str) -> ast.Program:
 
 
 def check_parser_errors(p: Parser):
+    error_count = len(p.errors)
+    if error_count > 0:
+        print(p.errors)
     assert len(p.errors) == 0
 
 

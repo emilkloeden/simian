@@ -42,6 +42,7 @@ class TokenType(enum.Enum):
     RBRACE = "}"
     LBRACKET = "["
     RBRACKET = "]"
+    PERIOD = "."
 
     # Keywords
     FUNCTION = "FUNCTION"

@@ -38,6 +38,7 @@ precedences = {
     TokenType.OR: Precedence.OR,
     TokenType.LPAREN: Precedence.CALL,
     TokenType.LBRACKET: Precedence.INDEX,
+    TokenType.PERIOD: Precedence.INDEX,
 }
 
 # Hrmm...
@@ -87,6 +88,7 @@ class Parser:
             TokenType.GT: self.parse_infix_expression,
             TokenType.LPAREN: self.parse_call_expression,
             TokenType.LBRACKET: self.parse_index_expression,
+            TokenType.PERIOD: self.parse_selector_expression,
         }
 
     def next_token(self) -> None:
@@ -191,9 +193,13 @@ class Parser:
     # EXPRESSIONS
     def parse_expression(self, precedence: int) -> ast.Expression:
         prefix = self.prefix_parse_fns.get(self.current_token.token_type, None)
-        # print(f"`prefix`: {prefix.__name__ if prefix is not None else prefix}, current token: {str(self.current_token)}")
+        # print(
+        #     f"`prefix`: {prefix.__name__ if prefix is not None else prefix}, current token: {str(self.current_token)}"
+        # )
         if prefix is None:
-            # print(f"`prefix` is none: self.current_token.token_type: {self.current_token.token_type}")
+            # print(
+            #     f"`prefix` is none: self.current_token.token_type: {self.current_token.token_type}"
+            # )
             self.no_prefix_parse_fn_error(self.current_token.token_type)
             return None
         left_exp = prefix()
@@ -203,7 +209,9 @@ class Parser:
             and precedence.value < self.peek_precedence().value
         ):
             infix = self.infix_parse_fns.get(self.peek_token.token_type, None)
-            # print(f"`infix`: {infix.__name__ if infix is not None else infix}, current token: {str(self.current_token)}")
+            # print(
+            #     f"`infix`: {infix.__name__ if infix is not None else infix}, current token: {str(self.current_token)}"
+            # )
 
             if infix is None:
                 return left_exp
@@ -333,14 +341,19 @@ class Parser:
         return exp
 
     def parse_index_expression(self, left: ast.Expression) -> ast.Expression:
-        exp = ast.IndexExpression(self.current_token, left)
         self.next_token()
-        exp.index = self.parse_expression(Precedence.LOWEST)
+        index = self.parse_expression(Precedence.LOWEST)
+        exp = ast.IndexExpression(self.current_token, left, index)
 
         if not self.expect_peek(TokenType.RBRACKET):
             return None
 
         return exp
+
+    def parse_selector_expression(self, exp: ast.Expression) -> ast.Expression:
+        self.expect_peek(TokenType.IDENT)
+        index = ast.StringLiteral(self.current_token, self.current_token.literal)
+        return ast.IndexExpression(self.current_token, exp, index)
 
     def parse_hash_literal(self) -> ast.Expression:
         lit = ast.HashLiteral(self.current_token)

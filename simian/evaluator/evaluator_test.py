@@ -254,6 +254,29 @@ def test_evaluate_hash_indexes():
             integer_object_tester(evaluated, expected)
 
 
+def test_evaluate_hash_selectors():
+    tests = [
+        ('{"foo": 5}.foo', 5),
+        ('{"foo": 5}.bar', None),
+        ('let key = "foo"; {"foo": 5}.key', None),
+        ("{}.foo", None),
+        ("{5: 5}.5", 5),
+        # ("{true: 5}.true", 5),
+        # ("{false: 5}.false", 5),
+    ]
+    for tt in tests:
+        input_: str
+        expected: typing.Optional[int]
+        evaluated: objects.Object
+
+        input_, expected = tt
+        evaluated = evaluate_input(input_)
+        if expected is None:
+            null_object_tester(evaluated)
+        else:
+            integer_object_tester(evaluated, expected)
+
+
 ###############
 # EXPRESSIONS #
 #  (COMPLEX)  #

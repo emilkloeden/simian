@@ -107,6 +107,8 @@ class Lexer:
             tok = Token(TokenType.RBRACKET, self.ch)
         elif self.ch == ":":
             tok = Token(TokenType.COLON, self.ch)
+        elif self.ch == ".":
+            tok = Token(TokenType.PERIOD, self.ch)
         elif self.ch == "\0":
             tok = Token(TokenType.EOF, "")
         else:

@@ -297,12 +297,14 @@ class CallExpression(Expression):
 
 
 class IndexExpression(Expression):
-    def __init__(self, token: Token, left: Expression):
+    def __init__(self, token: Token, left: Expression, index: Expression):
         self.token = token
         self.left = left
-        self.index: Expression
+        self.index = index
 
     def __str__(self):
+        if self.index is None:
+            return f"({str(self.left)}[None])"
         return f"({str(self.left)}[{str(self.index)}])"
 
     def token_literal(self):
